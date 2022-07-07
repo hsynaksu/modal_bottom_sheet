@@ -75,8 +75,7 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
   Widget build(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
     assert(widget.route._animationController != null);
-    final scrollController = PrimaryScrollController.of(context) ??
-        (_scrollController ??= ScrollController());
+    final scrollController = PrimaryScrollController.of(context) ?? (_scrollController ??= ScrollController());
     return ModalScrollController(
       controller: scrollController,
       child: Builder(
@@ -160,13 +159,13 @@ class ModalBottomSheetRoute<T> extends PageRoute<T> {
 
   @override
   bool get barrierDismissible => isDismissible;
-  
+
   @override
-  bool get maintainState => false; //idk but needed
+  bool get maintainState => true; //idk but needed
 
   @override
   bool get opaque => false; //transparency
-  
+
   @override
   final String? barrierLabel;
 
@@ -188,8 +187,7 @@ class ModalBottomSheetRoute<T> extends PageRoute<T> {
   bool get _hasScopedWillPopCallback => hasScopedWillPopCallback;
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
+  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
     // By definition, the bottom sheet is aligned to the bottom of the page
     // and isn't exposed to the top padding of the MediaQuery.
     Widget bottomSheet = MediaQuery.removePadding(
@@ -209,8 +207,7 @@ class ModalBottomSheetRoute<T> extends PageRoute<T> {
   }
 
   @override
-  bool canTransitionTo(TransitionRoute<dynamic> nextRoute) =>
-      nextRoute is ModalBottomSheetRoute;
+  bool canTransitionTo(TransitionRoute<dynamic> nextRoute) => nextRoute is ModalBottomSheetRoute;
 
   @override
   bool canTransitionFrom(TransitionRoute<dynamic> previousRoute) =>
@@ -247,15 +244,10 @@ Future<T?> showCustomModalBottomSheet<T>({
 }) async {
   assert(debugCheckHasMediaQuery(context));
   assert(debugCheckHasMaterialLocalizations(context));
-  final hasMaterialLocalizations =
-      Localizations.of<MaterialLocalizations>(context, MaterialLocalizations) !=
-          null;
-  final barrierLabel = hasMaterialLocalizations
-      ? MaterialLocalizations.of(context).modalBarrierDismissLabel
-      : '';
+  final hasMaterialLocalizations = Localizations.of<MaterialLocalizations>(context, MaterialLocalizations) != null;
+  final barrierLabel = hasMaterialLocalizations ? MaterialLocalizations.of(context).modalBarrierDismissLabel : '';
 
-  final result = await Navigator.of(context, rootNavigator: useRootNavigator)
-      .push(ModalBottomSheetRoute<T>(
+  final result = await Navigator.of(context, rootNavigator: useRootNavigator).push(ModalBottomSheetRoute<T>(
     builder: builder,
     bounce: bounce,
     containerBuilder: containerWidget,
